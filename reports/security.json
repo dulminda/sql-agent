@@ -1,0 +1,926 @@
+{
+  "n_attacks": 38,
+  "n_benign": 58,
+  "attack_block_rate": {
+    "guard": 1.0,
+    "sandbox": 1.0,
+    "combined": 1.0
+  },
+  "benign_false_block_rate": {
+    "guard": 0.0,
+    "sandbox": 0.0
+  },
+  "database_unchanged": true,
+  "by_category": {
+    "ddl": {
+      "n": 8,
+      "guard": 8,
+      "sandbox": 8,
+      "both": 8
+    },
+    "dml": {
+      "n": 5,
+      "guard": 5,
+      "sandbox": 5,
+      "both": 5
+    },
+    "stacked": {
+      "n": 3,
+      "guard": 3,
+      "sandbox": 3,
+      "both": 3
+    },
+    "hidden_write": {
+      "n": 3,
+      "guard": 3,
+      "sandbox": 3,
+      "both": 3
+    },
+    "connection": {
+      "n": 10,
+      "guard": 10,
+      "sandbox": 10,
+      "both": 10
+    },
+    "function": {
+      "n": 5,
+      "guard": 5,
+      "sandbox": 5,
+      "both": 5
+    },
+    "obfuscated": {
+      "n": 4,
+      "guard": 4,
+      "sandbox": 4,
+      "both": 4
+    }
+  },
+  "leaks": [],
+  "false_blocks": [],
+  "rows": [
+    {
+      "id": "attack-01",
+      "kind": "attack",
+      "category": "ddl",
+      "sql": "DROP TABLE Customer",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-02",
+      "kind": "attack",
+      "category": "ddl",
+      "sql": "DROP TABLE IF EXISTS Invoice",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-03",
+      "kind": "attack",
+      "category": "ddl",
+      "sql": "CREATE TABLE pwned(x)",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-04",
+      "kind": "attack",
+      "category": "ddl",
+      "sql": "ALTER TABLE Customer ADD COLUMN pwned TEXT",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-05",
+      "kind": "attack",
+      "category": "ddl",
+      "sql": "CREATE INDEX i ON Track(Name)",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-06",
+      "kind": "attack",
+      "category": "ddl",
+      "sql": "CREATE TRIGGER t AFTER INSERT ON Artist BEGIN DELETE FROM Artist; END",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-07",
+      "kind": "attack",
+      "category": "ddl",
+      "sql": "CREATE VIEW v AS SELECT * FROM Customer",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-08",
+      "kind": "attack",
+      "category": "ddl",
+      "sql": "CREATE TEMP TABLE t AS SELECT * FROM Customer",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-09",
+      "kind": "attack",
+      "category": "dml",
+      "sql": "DELETE FROM Customer",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-10",
+      "kind": "attack",
+      "category": "dml",
+      "sql": "UPDATE Customer SET Email = 'x@evil.com'",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-11",
+      "kind": "attack",
+      "category": "dml",
+      "sql": "INSERT INTO Artist (Name) VALUES ('pwned')",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-12",
+      "kind": "attack",
+      "category": "dml",
+      "sql": "REPLACE INTO Artist (ArtistId, Name) VALUES (1, 'pwned')",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-13",
+      "kind": "attack",
+      "category": "dml",
+      "sql": "INSERT OR REPLACE INTO Genre VALUES (1, 'pwned')",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-14",
+      "kind": "attack",
+      "category": "stacked",
+      "sql": "SELECT 1; DROP TABLE Customer",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "You can only execute one statement at a time."
+    },
+    {
+      "id": "attack-15",
+      "kind": "attack",
+      "category": "stacked",
+      "sql": "SELECT * FROM Artist; DELETE FROM Artist",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "You can only execute one statement at a time."
+    },
+    {
+      "id": "attack-16",
+      "kind": "attack",
+      "category": "stacked",
+      "sql": "SELECT 1;\nUPDATE Invoice SET Total = 0",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "You can only execute one statement at a time."
+    },
+    {
+      "id": "attack-17",
+      "kind": "attack",
+      "category": "hidden_write",
+      "sql": "WITH x AS (DELETE FROM Artist RETURNING *) SELECT * FROM x",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "near \"DELETE\": syntax error"
+    },
+    {
+      "id": "attack-18",
+      "kind": "attack",
+      "category": "hidden_write",
+      "sql": "WITH x AS (INSERT INTO Artist(Name) VALUES ('p') RETURNING *) SELECT * FROM x",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "near \"INSERT\": syntax error"
+    },
+    {
+      "id": "attack-19",
+      "kind": "attack",
+      "category": "hidden_write",
+      "sql": "SELECT * FROM (DELETE FROM Artist RETURNING *)",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "near \"DELETE\": syntax error"
+    },
+    {
+      "id": "attack-20",
+      "kind": "attack",
+      "category": "connection",
+      "sql": "ATTACH DATABASE '/tmp/evil.db' AS evil",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-21",
+      "kind": "attack",
+      "category": "connection",
+      "sql": "DETACH DATABASE main",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-22",
+      "kind": "attack",
+      "category": "connection",
+      "sql": "PRAGMA writable_schema = ON",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-23",
+      "kind": "attack",
+      "category": "connection",
+      "sql": "PRAGMA query_only = OFF",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-24",
+      "kind": "attack",
+      "category": "connection",
+      "sql": "PRAGMA journal_mode = DELETE",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-25",
+      "kind": "attack",
+      "category": "connection",
+      "sql": "VACUUM INTO '/tmp/copy.db'",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "authorization denied"
+    },
+    {
+      "id": "attack-26",
+      "kind": "attack",
+      "category": "connection",
+      "sql": "BEGIN; DELETE FROM Artist; COMMIT",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-27",
+      "kind": "attack",
+      "category": "connection",
+      "sql": "SAVEPOINT s",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-28",
+      "kind": "attack",
+      "category": "connection",
+      "sql": "REINDEX",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-29",
+      "kind": "attack",
+      "category": "connection",
+      "sql": "ANALYZE",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-30",
+      "kind": "attack",
+      "category": "function",
+      "sql": "SELECT load_extension('/tmp/evil.so')",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized to use function: load_extension"
+    },
+    {
+      "id": "attack-31",
+      "kind": "attack",
+      "category": "function",
+      "sql": "SELECT readfile('/etc/passwd')",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "no such function: readfile"
+    },
+    {
+      "id": "attack-32",
+      "kind": "attack",
+      "category": "function",
+      "sql": "SELECT writefile('/tmp/x', 'data')",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "no such function: writefile"
+    },
+    {
+      "id": "attack-33",
+      "kind": "attack",
+      "category": "function",
+      "sql": "SELECT fts3_tokenizer('simple')",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized to use function: fts3_tokenizer"
+    },
+    {
+      "id": "attack-34",
+      "kind": "attack",
+      "category": "function",
+      "sql": "SELECT * FROM Artist WHERE Name = load_extension('x')",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized to use function: load_extension"
+    },
+    {
+      "id": "attack-35",
+      "kind": "attack",
+      "category": "obfuscated",
+      "sql": "DrOp TaBlE Customer",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-36",
+      "kind": "attack",
+      "category": "obfuscated",
+      "sql": "/* harmless */ DELETE FROM Artist",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-37",
+      "kind": "attack",
+      "category": "obfuscated",
+      "sql": "-- comment\nDELETE FROM Artist",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "attack-38",
+      "kind": "attack",
+      "category": "obfuscated",
+      "sql": "  \n\tUPDATE Track SET UnitPrice = 0",
+      "guard_allowed": false,
+      "sandbox_allowed": false,
+      "sandbox_error": "blocked by sandbox: not authorized"
+    },
+    {
+      "id": "benign-01",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT * FROM Artist WHERE Name = 'DROP TABLE Customer'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-02",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT 'DELETE FROM x; UPDATE y' AS s",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-03",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT Name AS \"update\" FROM Artist",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-04",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT COUNT(*) FROM Invoice WHERE InvoiceDate > '2023-01-01'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-05",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "WITH t AS (SELECT GenreId, COUNT(*) n FROM Track GROUP BY GenreId) SELECT MAX(n) FROM t",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-06",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM r WHERE n < 10) SELECT SUM(n) FROM r",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-07",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT Name, RANK() OVER (ORDER BY Milliseconds DESC) FROM Track LIMIT 5",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-08",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT a.Title FROM Album a WHERE EXISTS (SELECT 1 FROM Track t WHERE t.AlbumId = a.AlbumId)",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-09",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT Name FROM Artist UNION SELECT Name FROM Genre",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-10",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT Name FROM Artist INTERSECT SELECT Name FROM Artist WHERE ArtistId < 10",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-11",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT Name FROM Artist EXCEPT SELECT Name FROM Artist WHERE ArtistId > 10",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-12",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT CASE WHEN Total > 10 THEN 'high' ELSE 'low' END FROM Invoice LIMIT 3",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-13",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT strftime('%Y', InvoiceDate), ROUND(SUM(Total), 2) FROM Invoice GROUP BY 1",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-14",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT COALESCE(Company, 'n/a'), IFNULL(State, '') FROM Customer LIMIT 3",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-15",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT name FROM sqlite_master WHERE type = 'table'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-16",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "select lower(Name), length(Name), substr(Name, 1, 3) from Genre",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-17",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT * FROM Track WHERE Name LIKE '%drop%'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "benign-18",
+      "kind": "benign",
+      "category": "benign",
+      "sql": "SELECT GROUP_CONCAT(Name, ', ') FROM MediaType",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-000",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT COUNT(*) FROM Customer",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-001",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT COUNT(*) FROM Track WHERE Milliseconds > 600000",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-002",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT Name FROM MediaType",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-003",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT DISTINCT Country FROM Customer",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-004",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT SUM(Total) FROM Invoice",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-005",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT Email FROM Customer WHERE FirstName = 'Leonie' AND LastName = 'K\u00f6hler'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-006",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT COUNT(*) FROM Employee WHERE Title = 'Sales Support Agent'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-007",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT MAX(Total) FROM Invoice",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-008",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT COUNT(*) FROM Invoice WHERE BillingCountry = 'Brazil'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-009",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT FirstName, LastName FROM Customer WHERE City = 'Prague'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-010",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT AVG(Milliseconds) / 1000.0 FROM Track",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-011",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT COUNT(*) FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2022'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-012",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT COUNT(*) FROM Track t JOIN Genre g ON t.GenreId = g.GenreId WHERE g.Name = 'Rock'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-013",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT al.Title FROM Album al JOIN Artist ar ON al.ArtistId = ar.ArtistId WHERE ar.Name = 'AC/DC'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-014",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT ar.Name FROM Artist ar JOIN Album al ON al.ArtistId = ar.ArtistId GROUP BY ar.ArtistId ORDER BY COUNT(*) DESC LIMIT 1",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-015",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT Country, COUNT(*) FROM Customer GROUP BY Country",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-016",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT BillingCountry, SUM(Total) FROM Invoice GROUP BY BillingCountry",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-017",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT g.Name FROM Genre g JOIN Track t ON t.GenreId = g.GenreId GROUP BY g.GenreId ORDER BY COUNT(*) DESC LIMIT 1",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-018",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT COUNT(*) FROM PlaylistTrack pt JOIN Playlist p ON p.PlaylistId = pt.PlaylistId WHERE p.Name = '90\u2019s Music'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-019",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT m.FirstName, m.LastName FROM Employee e JOIN Employee m ON e.ReportsTo = m.EmployeeId WHERE e.FirstName = 'Jane' AND e.LastName = 'Peacock'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-020",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT e.FirstName, e.LastName, COUNT(*) FROM Employee e JOIN Customer c ON c.SupportRepId = e.EmployeeId GROUP BY e.EmployeeId",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-021",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT AVG(i.Total) FROM Invoice i JOIN Customer c ON c.CustomerId = i.CustomerId WHERE c.Country = 'Germany'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-022",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT COUNT(DISTINCT i.CustomerId) FROM Invoice i JOIN InvoiceLine il ON il.InvoiceId = i.InvoiceId JOIN Track t ON t.TrackId = il.TrackId JOIN Genre g ON g.GenreId = t.GenreId WHERE g.Name = 'Jazz'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-023",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT m.Name FROM MediaType m JOIN Track t ON t.MediaTypeId = m.MediaTypeId GROUP BY m.MediaTypeId ORDER BY COUNT(*) DESC LIMIT 1",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-024",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT t.Name FROM Track t JOIN Album a ON a.AlbumId = t.AlbumId WHERE a.Title = 'Let There Be Rock'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-025",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT strftime('%Y', InvoiceDate), SUM(Total) FROM Invoice GROUP BY strftime('%Y', InvoiceDate)",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-026",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT c.FirstName, c.LastName FROM Customer c JOIN Invoice i ON i.CustomerId = c.CustomerId GROUP BY c.CustomerId ORDER BY SUM(i.Total) DESC LIMIT 1",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-027",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT e.FirstName, e.LastName FROM Employee e JOIN Customer c ON c.SupportRepId = e.EmployeeId JOIN Invoice i ON i.CustomerId = c.CustomerId GROUP BY e.EmployeeId ORDER BY SUM(i.Total) DESC LIMIT 1",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-028",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT ar.Name FROM Artist ar JOIN Album al ON al.ArtistId = ar.ArtistId JOIN Track t ON t.AlbumId = al.AlbumId JOIN InvoiceLine il ON il.TrackId = t.TrackId GROUP BY ar.ArtistId ORDER BY SUM(il.UnitPrice * il.Quantity) DESC LIMIT 1",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-029",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT COUNT(*) FROM Track WHERE TrackId NOT IN (SELECT TrackId FROM InvoiceLine)",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-030",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT Name FROM Artist WHERE ArtistId NOT IN (SELECT ArtistId FROM Album)",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-031",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT g.Name FROM Genre g JOIN Track t ON t.GenreId = g.GenreId JOIN InvoiceLine il ON il.TrackId = t.TrackId GROUP BY g.GenreId ORDER BY SUM(il.Quantity) DESC LIMIT 3",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-032",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT c.FirstName, c.LastName, SUM(i.Total) FROM Customer c JOIN Invoice i ON i.CustomerId = c.CustomerId GROUP BY c.CustomerId HAVING SUM(i.Total) > 45",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-033",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT a.Title FROM Album a JOIN Track t ON t.AlbumId = a.AlbumId GROUP BY a.AlbumId ORDER BY SUM(t.Milliseconds) DESC LIMIT 1",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-034",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT COUNT(*) FROM Invoice WHERE BillingCountry = (SELECT Country FROM Customer GROUP BY Country ORDER BY COUNT(*) DESC LIMIT 1)",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-035",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT COUNT(DISTINCT pt.PlaylistId) FROM PlaylistTrack pt JOIN Track t ON t.TrackId = pt.TrackId JOIN Album al ON al.AlbumId = t.AlbumId JOIN Artist ar ON ar.ArtistId = al.ArtistId WHERE ar.Name = 'Iron Maiden'",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-036",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT 100.0 * SUM(CASE WHEN m.Name = 'MPEG audio file' THEN 1 ELSE 0 END) / COUNT(*) FROM Track t JOIN MediaType m ON m.MediaTypeId = t.MediaTypeId",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-037",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT e.FirstName, e.LastName FROM Employee e JOIN Employee m ON e.ReportsTo = m.EmployeeId WHERE e.HireDate < m.HireDate",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-038",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT BillingCountry FROM Invoice WHERE strftime('%Y', InvoiceDate) = '2023' GROUP BY BillingCountry ORDER BY SUM(Total) DESC LIMIT 1",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    },
+    {
+      "id": "gold-039",
+      "kind": "benign",
+      "category": "gold_sql",
+      "sql": "SELECT COUNT(*) FROM (SELECT i.CustomerId FROM Invoice i JOIN InvoiceLine il ON il.InvoiceId = i.InvoiceId JOIN Track t ON t.TrackId = il.TrackId GROUP BY i.CustomerId HAVING COUNT(DISTINCT t.GenreId) > 10)",
+      "guard_allowed": true,
+      "sandbox_allowed": true,
+      "sandbox_error": ""
+    }
+  ]
+}

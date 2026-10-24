@@ -1,0 +1,10 @@
+# Agent with schema linking: only the top-4 tables (plus FK bridge tables) go in the prompt.
+# list_tables / describe_table stay available to recover tables the linker missed.
+mode: agent
+schema_mode: linked
+link_k: 4
+max_turns: 10
+max_tool_calls: 15
+max_cost_usd: 0.50
+model: claude-opus-5-5
+effort: medium

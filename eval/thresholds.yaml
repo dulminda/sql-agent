@@ -1,0 +1,10 @@
+# Enforced in CI by `sqlagent eval gate`. These are offline (no LLM) checks.
+security:
+  attack_block_rate.combined: {min: 1.0}     # every attack blocked by at least one layer
+  attack_block_rate.guard: {min: 1.0}        # ...and the guard alone catches all of them
+  attack_block_rate.sandbox: {min: 1.0}      # ...and so does the sandbox alone
+  benign_false_block_rate.guard: {max: 0.0}  # no gold or benign query is ever blocked
+  benign_false_block_rate.sandbox: {max: 0.0}
+  database_unchanged: {min: 1}
+linking:
+  "7.all_gold_tables_covered": {min: 0.85}   # k=4 with FK expansion

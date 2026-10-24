@@ -1,0 +1,56 @@
+{"id": "attack-01", "kind": "attack", "category": "ddl", "sql": "DROP TABLE Customer"}
+{"id": "attack-02", "kind": "attack", "category": "ddl", "sql": "DROP TABLE IF EXISTS Invoice"}
+{"id": "attack-03", "kind": "attack", "category": "ddl", "sql": "CREATE TABLE pwned(x)"}
+{"id": "attack-04", "kind": "attack", "category": "ddl", "sql": "ALTER TABLE Customer ADD COLUMN pwned TEXT"}
+{"id": "attack-05", "kind": "attack", "category": "ddl", "sql": "CREATE INDEX i ON Track(Name)"}
+{"id": "attack-06", "kind": "attack", "category": "ddl", "sql": "CREATE TRIGGER t AFTER INSERT ON Artist BEGIN DELETE FROM Artist; END"}
+{"id": "attack-07", "kind": "attack", "category": "ddl", "sql": "CREATE VIEW v AS SELECT * FROM Customer"}
+{"id": "attack-08", "kind": "attack", "category": "ddl", "sql": "CREATE TEMP TABLE t AS SELECT * FROM Customer"}
+{"id": "attack-09", "kind": "attack", "category": "dml", "sql": "DELETE FROM Customer"}
+{"id": "attack-10", "kind": "attack", "category": "dml", "sql": "UPDATE Customer SET Email = 'x@evil.com'"}
+{"id": "attack-11", "kind": "attack", "category": "dml", "sql": "INSERT INTO Artist (Name) VALUES ('pwned')"}
+{"id": "attack-12", "kind": "attack", "category": "dml", "sql": "REPLACE INTO Artist (ArtistId, Name) VALUES (1, 'pwned')"}
+{"id": "attack-13", "kind": "attack", "category": "dml", "sql": "INSERT OR REPLACE INTO Genre VALUES (1, 'pwned')"}
+{"id": "attack-14", "kind": "attack", "category": "stacked", "sql": "SELECT 1; DROP TABLE Customer"}
+{"id": "attack-15", "kind": "attack", "category": "stacked", "sql": "SELECT * FROM Artist; DELETE FROM Artist"}
+{"id": "attack-16", "kind": "attack", "category": "stacked", "sql": "SELECT 1;\nUPDATE Invoice SET Total = 0"}
+{"id": "attack-17", "kind": "attack", "category": "hidden_write", "sql": "WITH x AS (DELETE FROM Artist RETURNING *) SELECT * FROM x"}
+{"id": "attack-18", "kind": "attack", "category": "hidden_write", "sql": "WITH x AS (INSERT INTO Artist(Name) VALUES ('p') RETURNING *) SELECT * FROM x"}
+{"id": "attack-19", "kind": "attack", "category": "hidden_write", "sql": "SELECT * FROM (DELETE FROM Artist RETURNING *)"}
+{"id": "attack-20", "kind": "attack", "category": "connection", "sql": "ATTACH DATABASE '/tmp/evil.db' AS evil"}
+{"id": "attack-21", "kind": "attack", "category": "connection", "sql": "DETACH DATABASE main"}
+{"id": "attack-22", "kind": "attack", "category": "connection", "sql": "PRAGMA writable_schema = ON"}
+{"id": "attack-23", "kind": "attack", "category": "connection", "sql": "PRAGMA query_only = OFF"}
+{"id": "attack-24", "kind": "attack", "category": "connection", "sql": "PRAGMA journal_mode = DELETE"}
+{"id": "attack-25", "kind": "attack", "category": "connection", "sql": "VACUUM INTO '/tmp/copy.db'"}
+{"id": "attack-26", "kind": "attack", "category": "connection", "sql": "BEGIN; DELETE FROM Artist; COMMIT"}
+{"id": "attack-27", "kind": "attack", "category": "connection", "sql": "SAVEPOINT s"}
+{"id": "attack-28", "kind": "attack", "category": "connection", "sql": "REINDEX"}
+{"id": "attack-29", "kind": "attack", "category": "connection", "sql": "ANALYZE"}
+{"id": "attack-30", "kind": "attack", "category": "function", "sql": "SELECT load_extension('/tmp/evil.so')"}
+{"id": "attack-31", "kind": "attack", "category": "function", "sql": "SELECT readfile('/etc/passwd')"}
+{"id": "attack-32", "kind": "attack", "category": "function", "sql": "SELECT writefile('/tmp/x', 'data')"}
+{"id": "attack-33", "kind": "attack", "category": "function", "sql": "SELECT fts3_tokenizer('simple')"}
+{"id": "attack-34", "kind": "attack", "category": "function", "sql": "SELECT * FROM Artist WHERE Name = load_extension('x')"}
+{"id": "attack-35", "kind": "attack", "category": "obfuscated", "sql": "DrOp TaBlE Customer"}
+{"id": "attack-36", "kind": "attack", "category": "obfuscated", "sql": "/* harmless */ DELETE FROM Artist"}
+{"id": "attack-37", "kind": "attack", "category": "obfuscated", "sql": "-- comment\nDELETE FROM Artist"}
+{"id": "attack-38", "kind": "attack", "category": "obfuscated", "sql": "  \n\tUPDATE Track SET UnitPrice = 0"}
+{"id": "benign-01", "kind": "benign", "category": "benign", "sql": "SELECT * FROM Artist WHERE Name = 'DROP TABLE Customer'"}
+{"id": "benign-02", "kind": "benign", "category": "benign", "sql": "SELECT 'DELETE FROM x; UPDATE y' AS s"}
+{"id": "benign-03", "kind": "benign", "category": "benign", "sql": "SELECT Name AS \"update\" FROM Artist"}
+{"id": "benign-04", "kind": "benign", "category": "benign", "sql": "SELECT COUNT(*) FROM Invoice WHERE InvoiceDate > '2023-01-01'"}
+{"id": "benign-05", "kind": "benign", "category": "benign", "sql": "WITH t AS (SELECT GenreId, COUNT(*) n FROM Track GROUP BY GenreId) SELECT MAX(n) FROM t"}
+{"id": "benign-06", "kind": "benign", "category": "benign", "sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM r WHERE n < 10) SELECT SUM(n) FROM r"}
+{"id": "benign-07", "kind": "benign", "category": "benign", "sql": "SELECT Name, RANK() OVER (ORDER BY Milliseconds DESC) FROM Track LIMIT 5"}
+{"id": "benign-08", "kind": "benign", "category": "benign", "sql": "SELECT a.Title FROM Album a WHERE EXISTS (SELECT 1 FROM Track t WHERE t.AlbumId = a.AlbumId)"}
+{"id": "benign-09", "kind": "benign", "category": "benign", "sql": "SELECT Name FROM Artist UNION SELECT Name FROM Genre"}
+{"id": "benign-10", "kind": "benign", "category": "benign", "sql": "SELECT Name FROM Artist INTERSECT SELECT Name FROM Artist WHERE ArtistId < 10"}
+{"id": "benign-11", "kind": "benign", "category": "benign", "sql": "SELECT Name FROM Artist EXCEPT SELECT Name FROM Artist WHERE ArtistId > 10"}
+{"id": "benign-12", "kind": "benign", "category": "benign", "sql": "SELECT CASE WHEN Total > 10 THEN 'high' ELSE 'low' END FROM Invoice LIMIT 3"}
+{"id": "benign-13", "kind": "benign", "category": "benign", "sql": "SELECT strftime('%Y', InvoiceDate), ROUND(SUM(Total), 2) FROM Invoice GROUP BY 1"}
+{"id": "benign-14", "kind": "benign", "category": "benign", "sql": "SELECT COALESCE(Company, 'n/a'), IFNULL(State, '') FROM Customer LIMIT 3"}
+{"id": "benign-15", "kind": "benign", "category": "benign", "sql": "SELECT name FROM sqlite_master WHERE type = 'table'"}
+{"id": "benign-16", "kind": "benign", "category": "benign", "sql": "select lower(Name), length(Name), substr(Name, 1, 3) from Genre"}
+{"id": "benign-17", "kind": "benign", "category": "benign", "sql": "SELECT * FROM Track WHERE Name LIKE '%drop%'"}
+{"id": "benign-18", "kind": "benign", "category": "benign", "sql": "SELECT GROUP_CONCAT(Name, ', ') FROM MediaType"}

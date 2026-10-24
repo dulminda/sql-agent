@@ -1,0 +1,122 @@
+[
+  {
+    "k": 1,
+    "fk_expansion": false,
+    "table_recall": 0.6,
+    "all_gold_tables_covered": 0.375,
+    "covered_ci": [
+      0.225,
+      0.525
+    ],
+    "mean_tables_shown": 1.0,
+    "schema_size_vs_full": 0.1281936351411923
+  },
+  {
+    "k": 1,
+    "fk_expansion": true,
+    "table_recall": 0.6,
+    "all_gold_tables_covered": 0.375,
+    "covered_ci": [
+      0.225,
+      0.525
+    ],
+    "mean_tables_shown": 1.0,
+    "schema_size_vs_full": 0.1281936351411923
+  },
+  {
+    "k": 2,
+    "fk_expansion": false,
+    "table_recall": 0.8479166666666667,
+    "all_gold_tables_covered": 0.75,
+    "covered_ci": [
+      0.625,
+      0.875
+    ],
+    "mean_tables_shown": 1.975,
+    "schema_size_vs_full": 0.26424249215598383
+  },
+  {
+    "k": 2,
+    "fk_expansion": true,
+    "table_recall": 0.8479166666666667,
+    "all_gold_tables_covered": 0.75,
+    "covered_ci": [
+      0.625,
+      0.875
+    ],
+    "mean_tables_shown": 1.975,
+    "schema_size_vs_full": 0.26424249215598383
+  },
+  {
+    "k": 3,
+    "fk_expansion": false,
+    "table_recall": 0.90625,
+    "all_gold_tables_covered": 0.85,
+    "covered_ci": [
+      0.725,
+      0.95
+    ],
+    "mean_tables_shown": 2.8,
+    "schema_size_vs_full": 0.3673520842671447
+  },
+  {
+    "k": 3,
+    "fk_expansion": true,
+    "table_recall": 0.90625,
+    "all_gold_tables_covered": 0.85,
+    "covered_ci": [
+      0.725,
+      0.95
+    ],
+    "mean_tables_shown": 2.8,
+    "schema_size_vs_full": 0.3673520842671447
+  },
+  {
+    "k": 4,
+    "fk_expansion": false,
+    "table_recall": 0.9125,
+    "all_gold_tables_covered": 0.85,
+    "covered_ci": [
+      0.725,
+      0.95
+    ],
+    "mean_tables_shown": 3.175,
+    "schema_size_vs_full": 0.4040452711788435
+  },
+  {
+    "k": 4,
+    "fk_expansion": true,
+    "table_recall": 0.9270833333333333,
+    "all_gold_tables_covered": 0.875,
+    "covered_ci": [
+      0.775,
+      0.975
+    ],
+    "mean_tables_shown": 3.25,
+    "schema_size_vs_full": 0.40806252801434334
+  },
+  {
+    "k": 6,
+    "fk_expansion": false,
+    "table_recall": 0.9625,
+    "all_gold_tables_covered": 0.95,
+    "covered_ci": [
+      0.875,
+      1.0
+    ],
+    "mean_tables_shown": 3.425,
+    "schema_size_vs_full": 0.41999103541012994
+  },
+  {
+    "k": 6,
+    "fk_expansion": true,
+    "table_recall": 0.9625,
+    "all_gold_tables_covered": 0.95,
+    "covered_ci": [
+      0.875,
+      1.0
+    ],
+    "mean_tables_shown": 3.45,
+    "schema_size_vs_full": 0.42133012102196316
+  }
+]

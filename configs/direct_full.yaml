@@ -1,0 +1,5 @@
+# One shot, no execution feedback: the model sees the full schema and submits immediately.
+mode: direct
+schema_mode: full
+model: claude-opus-5-5
+effort: medium

@@ -1,0 +1,8 @@
+# Model ablation: Claude Sonnet 5.5 (half the per-token price of Opus 5.5).
+mode: agent
+schema_mode: full
+max_turns: 10
+max_tool_calls: 15
+max_cost_usd: 0.50
+model: claude-sonnet-5-5
+effort: medium
